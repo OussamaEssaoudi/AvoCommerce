@@ -1,11 +1,23 @@
 import React from 'react';
+import './BoutiquesListe.css';
+import logo from './avocado.png';
+import Header from './Header';
+import Filter from './Filter';
 
-function BoutiqueListe() {
+function BoutiquesListe() {
   return (
-   <div>
-      <div className="h-32 bg-red-500"> a</div>
+   <div className='h-screen'>
+      <Header/>
+      <div className='flex items-center mx-10 mt-4'>
+        <div className='title'>Bonjour Oussama, voici vos boutiques !</div>
+        <div className='ml-auto'>
+          <button className='mr-6'>Gérer les catégories</button>
+          <button>Créer une boutique</button>
+        </div>
+      </div>
+      <Filter/>
    </div> 
   );
 }
 
-export default BoutiqueListe;
+export default BoutiquesListe;
