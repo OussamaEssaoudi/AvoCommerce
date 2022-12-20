@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import BoutiquesListe from './BoutiquesListe';
+import Boutiques from './Boutiques';
 import './App.css';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-          <Route exact path="/" element={<BoutiquesListe />} />
+          <Route exact path="/" element={<Boutiques />} />
       </Routes>
     </BrowserRouter>
   );

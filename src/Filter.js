@@ -23,7 +23,7 @@ function Filter() {
   }
 
   return (
-    <div className="filter flex flex-col ml-10 pl-10 pt-10">
+    <div className="filter flex flex-col pl-10 pt-10">
       
         <div className="flex flex-col">
           <RadioButton
