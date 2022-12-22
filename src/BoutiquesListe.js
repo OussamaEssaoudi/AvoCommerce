@@ -44,7 +44,7 @@ function BoutiquesListe() {
   }
 
   return (
-    <div className="">
+    <div>
       
         {Boutiques[currentItems] ? (<Boutique id={Boutiques[currentItems].id}  nom={Boutiques[currentItems].nom} nbProduit={Boutiques[currentItems].nbProduit} nbCategorie={Boutiques[currentItems].nbCategorie} status={Boutiques[currentItems].status} date={Boutiques[currentItems].date} />) : (null)}
         {Boutiques[currentItems+1] ? (<Boutique id={Boutiques[currentItems+1].id}  nom={Boutiques[currentItems+1].nom} nbProduit={Boutiques[currentItems+1].nbProduit} nbCategorie={Boutiques[currentItems+1].nbCategorie} status={Boutiques[currentItems+1].status} date={Boutiques[currentItems+1].date} />) : (<div className='emptyBoutique mb-5'></div>)}
