@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './Filter.css';
 import { RadioButton } from "./RadioButton";
-import logo from './avocado.png';
 
 
 function Filter() {

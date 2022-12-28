@@ -1,6 +1,6 @@
 import React from 'react';
 import './Header.css';
-import logo from './avocado.png';
+import logo from './img/avocado.png';
 
 function Header() {
   return (

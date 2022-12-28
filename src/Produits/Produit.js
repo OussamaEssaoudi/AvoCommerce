@@ -4,10 +4,12 @@ import './Produit.css';
 
 function Produit(props) {
 
-
+  function handleProductChange(newValue) {
+    props.onChange(newValue);
+  }
 
   return (
-    <div className="produit flex flex-col px-10 pt-5 mb-5">
+    <div className="produit flex flex-col px-10 pt-5 mb-5 cursor-pointer" onClick={() => {handleProductChange(props.id)}}>
 
       <div className='storeTitle'>{props.nom}</div>
 

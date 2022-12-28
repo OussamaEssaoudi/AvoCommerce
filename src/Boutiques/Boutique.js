@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import {Link} from 'react-router-dom';
 import './Boutique.css';
 
 
 function Boutique(props) {
 
-
+  function handleStoreChange(newValue) {
+    props.onChange(newValue);
+  }
+  
 
   return (
     <div className="boutique flex flex-col px-10 pt-5 mb-5">
@@ -33,8 +37,10 @@ function Boutique(props) {
         </div>
 
         <div className='ml-auto mt-10'>
-          <button className='storeButton'>Ouvrir</button>
-          <button className='ml-5 storeButton'>Modifier</button>
+          <Link to="/produits" state={{ produits: props.produits }}>
+            <button className='storeButton'>Ouvrir</button>
+          </Link>
+          <button className='ml-5 storeButton' onClick={() => {handleStoreChange(props.id)}}>Modifier</button>
         </div>
 
      </div>
