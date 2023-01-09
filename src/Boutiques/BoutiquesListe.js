@@ -25,7 +25,7 @@ function BoutiquesListe(props) {
   return (
     <div>
       
-        {props.boutiques[currentItems] ? (<Boutique id={props.boutiques[currentItems].id}  nom={props.boutiques[currentItems].nom} nbProduit={props.boutiques[currentItems].nbProduit} nbCategorie={props.boutiques[currentItems].nbCategorie} status={props.boutiques[currentItems].status} date={props.boutiques[currentItems].date} onChange={handleStoreChange} produits={props.boutiques[currentItems].produits} />) : (null)}
+        {props.boutiques[currentItems] ? (<Boutique id={props.boutiques[currentItems].id}  nom={props.boutiques[currentItems].title} nbProduit={props.boutiques[currentItems].products ? (props.boutiques[currentItems].products.length) : 0} nbCategorie={props.boutiques[currentItems].categories ? (props.boutiques[currentItems].categories.length) : 0} status={props.boutiques[currentItems].isOpen} date={props.boutiques[currentItems].createdAt} onChange={handleStoreChange} produits={props.boutiques[currentItems].products} />) : (null)}
         {props.boutiques[currentItems+1] ? (<Boutique key={props.boutiques[currentItems+1].id} id={props.boutiques[currentItems+1].id}  nom={props.boutiques[currentItems+1].nom} nbProduit={props.boutiques[currentItems+1].nbProduit} nbCategorie={props.boutiques[currentItems+1].nbCategorie} status={props.boutiques[currentItems+1].status} date={props.boutiques[currentItems+1].date} onChange={handleStoreChange} produits={props.boutiques[currentItems].produits} />) : (<div className='emptyBoutique mb-5'></div>)}
         
         <div className='flex justify-center'>

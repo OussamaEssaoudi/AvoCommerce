@@ -1,19 +1,21 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router} from 'react-router-dom';
 import Boutiques from './Boutiques/Boutiques';
 import './App.css';
 import Produits from './Produits/Produits';
 import Categories from './Categories/Categories';
+import Login from './Auth/Login';
+import  RouteLinks from './Routes/RouteLinks';
+import PrivateRoute from './Routes/PrivateRoutes.js';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-          <Route exact path="/" element={<Boutiques />} />
-          <Route exact path="/produits" element={<Produits />} />
-          <Route exact path="/categories" element={<Categories />} />
-      </Routes>
-    </BrowserRouter>
+    <Router>
+      <RouteLinks path='/' exact component={Login} /> 
+      <PrivateRoute path='/boutiques' exact component={Boutiques}/>
+      <PrivateRoute path='/produits' exact component={Produits}/>
+      <PrivateRoute path='/categories' exact component={Categories}/>
+    </Router> 
   );
 }
 

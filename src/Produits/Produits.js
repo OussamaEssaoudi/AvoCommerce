@@ -78,78 +78,78 @@ function Produits() {
     handleShowProduct(0);
   }
 
-  let Produits = [
-    {
-      id: 0,
-      nom: "Produit 1",
-      prix: "29",
-      categories: [
-        "categorie1",
-        "categorie2",
-      ],
-      description: "Lorum ipsum",
-    },
-    {
-      id: 1,
-      nom: "Produit 2",
-      prix: "29",
-      categories: [
-        "categorie1",
-        "categorie2",
-      ],
-      description: "Lorum ipsum",
-    },
-    {
-      id: 2,
-      nom: "Produit 3",
-      prix: "29",
-      categories: [
-        "categorie1",
-        "categorie2",
-      ],
-      description: "Lorum ipsum",
-    },
-    {
-      id: 3,
-      nom: "Produit 1",
-      prix: "29",
-      categories: [
-        "categorie1",
-        "categorie2",
-      ],
-      description: "Lorum ipsum",
-    },
-    {
-      id: 4,
-      nom: "Produit 2",
-      prix: "29",
-      categories: [
-        "categorie1",
-        "categorie2",
-      ],
-      description: "Lorum ipsum",
-    },
-    {
-      id: 5,
-      nom: "Produit 3",
-      prix: "29",
-      categories: [
-        "categorie1",
-        "categorie2",
-      ],
-      description: "Lorum ipsum",
-    },
-    {
-      id: 6,
-      nom: "Produit 4",
-      prix: "29",
-      categories: [
-        "categorie1",
-        "categorie2",
-      ],
-      description: "Lorum ipsum",
-    },
-  ];
+  // let Produits = [
+  //   {
+  //     id: 0,
+  //     nom: "Produit 1",
+  //     prix: "29",
+  //     categories: [
+  //       "categorie1",
+  //       "categorie2",
+  //     ],
+  //     description: "Lorum ipsum",
+  //   },
+  //   {
+  //     id: 1,
+  //     nom: "Produit 2",
+  //     prix: "29",
+  //     categories: [
+  //       "categorie1",
+  //       "categorie2",
+  //     ],
+  //     description: "Lorum ipsum",
+  //   },
+  //   {
+  //     id: 2,
+  //     nom: "Produit 3",
+  //     prix: "29",
+  //     categories: [
+  //       "categorie1",
+  //       "categorie2",
+  //     ],
+  //     description: "Lorum ipsum",
+  //   },
+  //   {
+  //     id: 3,
+  //     nom: "Produit 1",
+  //     prix: "29",
+  //     categories: [
+  //       "categorie1",
+  //       "categorie2",
+  //     ],
+  //     description: "Lorum ipsum",
+  //   },
+  //   {
+  //     id: 4,
+  //     nom: "Produit 2",
+  //     prix: "29",
+  //     categories: [
+  //       "categorie1",
+  //       "categorie2",
+  //     ],
+  //     description: "Lorum ipsum",
+  //   },
+  //   {
+  //     id: 5,
+  //     nom: "Produit 3",
+  //     prix: "29",
+  //     categories: [
+  //       "categorie1",
+  //       "categorie2",
+  //     ],
+  //     description: "Lorum ipsum",
+  //   },
+  //   {
+  //     id: 6,
+  //     nom: "Produit 4",
+  //     prix: "29",
+  //     categories: [
+  //       "categorie1",
+  //       "categorie2",
+  //     ],
+  //     description: "Lorum ipsum",
+  //   },
+  // ];
 
 
   return (
