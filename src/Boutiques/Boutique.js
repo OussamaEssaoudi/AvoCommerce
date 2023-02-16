@@ -6,8 +6,15 @@ import './Boutique.css';
 
 function Boutique(props) {
 
-  function handleStoreChange(newValue) {
-    props.onChange(newValue);
+  function handleStoreChange() {
+    let store = {
+      id : props.id,
+      title : props.nom,
+      isOpen : props.status,
+      opening_hours : props.hours,
+    }
+
+    props.onChange(store);
   }
   
   const formated = moment(props.date).format('DD MMM, YYYY');
@@ -39,10 +46,10 @@ function Boutique(props) {
         </div>
 
         <div className='ml-auto mt-10'>
-          <Link to={`/produits/${props.produits}`}>
+          <Link to={`/produits/${props.id}`}>
             <button className='storeButton'>Ouvrir</button>
           </Link>
-          <button className='ml-5 storeButton' onClick={() => {handleStoreChange(props.id)}}>Modifier</button>
+          <button className='ml-5 storeButton' onClick={() => {handleStoreChange()}}>Modifier</button>
         </div>
 
      </div>

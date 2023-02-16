@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Filter.css';
 import { RadioButton } from "./RadioButton";
 
 
-function Filter() {
+function Filter(props) {
 
+  const [params, setParams] = useState(props.params);
   const [selectedValue, setSelectedValue] = useState("tout");
   const [selectedBeforeDate, setSelectedBeforeDate] = useState("");
   const [selectedAfterDate, setSelectedAfterDate] = useState("");
@@ -20,6 +21,28 @@ function Filter() {
   const handleInputAfterChange = (event) => {
     setSelectedAfterDate(event.target.value);
   }
+
+  const handleParamsChange = () => {
+    let par = "";
+    // console.log(selectedValue === "conge")
+    selectedValue === "tout" ? (par = "") : (
+      selectedValue === "conge" ? (par = "isOpen=false&") : (par = "isOpen=true&")
+    )
+    // console.log("he" + params)
+  
+    selectedAfterDate === "" ? (par = par) : (par = par + "dateFrom=" + selectedAfterDate + "&")
+    
+    selectedBeforeDate === "" ? (par = par) : (par = par + "dateTo=" + selectedBeforeDate + "&")
+
+    // console.log(par)
+    setParams(par);
+  }
+
+  useEffect(() => {
+    handleParamsChange();
+    props.onChange(params);
+    // console.log(params);
+  },[selectedValue,selectedAfterDate,selectedBeforeDate,params])
 
   return (
     <div className="filter flex flex-col pl-10 pt-10">

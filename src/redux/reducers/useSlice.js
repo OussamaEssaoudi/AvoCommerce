@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export const userSlice =  createSlice({
     name:"user",
@@ -9,7 +11,8 @@ export const userSlice =  createSlice({
     reducers:{
         login: (state, action) => {
             state.user = action.payload;
-            localStorage.setItem('user', JSON.stringify(state.user))
+            localStorage.setItem('user', JSON.stringify(state.user.accessToken));
+            localStorage.setItem('userID', JSON.stringify(state.user._id));
         },
         logout: (state) => {
             state.user = null;
@@ -22,6 +25,34 @@ export const userSlice =  createSlice({
 });
 
 export const { login, logout ,loginError } = userSlice.actions;
-export const selectUser = (state) => state.user.user;
+// export const selectUser = (state) => state.user.user;
 export default userSlice.reducer;
 
+const URL = 'http://localhost:8080';
+
+export const postLogin = (state) => {
+    console.log(state)
+      return async (dispatch) => {
+          const config = {
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          };
+          try {
+              const response = await axios.post(`${URL}/api/auth/login/`, state, config);
+        // const { accessToken } = response.data;
+        // localStorage.setItem('user', accessToken);
+  
+              dispatch(login(response.data));
+              toast.success("You are successfully logged in")
+              setTimeout(() => { 
+                  window.location.reload();
+              }, 800)
+          } catch (error) {
+              console.log(error.response.data);
+              toast.error(error.response.data);
+            dispatch(loginError(error.message))
+              // dispatch(loginError(error.response.data.non_field_errors[0]))
+          }
+      };
+  };

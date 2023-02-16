@@ -1,28 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import './Produits.css';
 import Header from './../Header';
 import langue from './../img/i18.png';
 import ProduitsListe from './ProduitsListe';
 import PopUpProduct from './PopUpProduct';
+import { addNewProduct, editaProduct, fetchProducts } from '../redux/reducers/products';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCategories } from '../redux/reducers/categories';
+import processPlugins from 'tailwindcss/lib/util/processPlugins';
 
 
 function Produits() {
 
+  const { id } = useParams();
 
+  const [lang, setSelectedLang] = useState("fr");
   const [currentProduct, setCurrentProduct] = useState(0);
   const [showProduct, setShowProduct] = useState(0);
-  const [selectedProductName, setSelectedProductName] = useState("");
+  const [selectedProductName, setSelectedProductName] = useState({});
   const [selectedProductPrice, setSelectedProductPrice] = useState("");
-  const [selectedProductDesc, setSelectedProductDesc] = useState("");
+  const [selectedProductDesc, setSelectedProductDesc] = useState({});
   const [selectedProductCat, setSelectedProductCat] = useState([]);
+  const [params, setParams] = useState("");
 
   function handleProductChange(newValue) {
-    setCurrentProduct(newValue);
+    setCurrentProduct(newValue.id);
+    setSelectedProductName(newValue.title);
+    setSelectedProductPrice(newValue.price);
+    setSelectedProductCat(newValue.categories);
+    setSelectedProductDesc(newValue.description);
     setShowProduct(1);
-    setSelectedProductName(Produits[newValue].nom);
-    setSelectedProductPrice(Produits[newValue].prix);
-    setSelectedProductCat(Produits[newValue].categories);
-    setSelectedProductDesc(Produits[newValue].description);
   }
 
   function handleShowProduct(value) {
@@ -50,12 +58,11 @@ function Produits() {
   }
 
   //bouton modifier produit
-  function editProductName() {
-    Produits[currentProduct].nom = selectedProductName;
-    Produits[currentProduct].prix = selectedProductPrice;
-    Produits[currentProduct].categories = selectedProductCat;
-    Produits[currentProduct].description = selectedProductDesc;
-    console.log(Produits[currentProduct]);
+  function editProductName(product) {
+    
+    console.log(product)
+    console.log(currentProduct)
+    editaProduct(product,currentProduct);
     handleShowProduct(0);
   }
 
@@ -64,93 +71,49 @@ function Produits() {
     handleShowProduct(2);
   }
 
+	const userID = JSON.parse(localStorage.getItem("userID"));
+
   //bouton cree Produit
-  function createProduct() {
-    let prod = {
-      id: (Produits[Produits.length-1].id + 1),
-      nom: selectedProductName,
-      prix: selectedProductPrice,
-      categories: selectedProductCat,
-      description: selectedProductDesc,
-    };
-    Produits.push(prod);
-    console.log(Produits[Produits.length-1]);
+  function createProduct(prod) {
+    let product = {
+      "userId": userID,
+      "StoreId": id,
+      "title": prod.title,
+      "description": prod.description,
+      "categories": prod.categories,
+      "price": prod.price
+    }
+    addNewProduct(product);
     handleShowProduct(0);
   }
 
-  // let Produits = [
-  //   {
-  //     id: 0,
-  //     nom: "Produit 1",
-  //     prix: "29",
-  //     categories: [
-  //       "categorie1",
-  //       "categorie2",
-  //     ],
-  //     description: "Lorum ipsum",
-  //   },
-  //   {
-  //     id: 1,
-  //     nom: "Produit 2",
-  //     prix: "29",
-  //     categories: [
-  //       "categorie1",
-  //       "categorie2",
-  //     ],
-  //     description: "Lorum ipsum",
-  //   },
-  //   {
-  //     id: 2,
-  //     nom: "Produit 3",
-  //     prix: "29",
-  //     categories: [
-  //       "categorie1",
-  //       "categorie2",
-  //     ],
-  //     description: "Lorum ipsum",
-  //   },
-  //   {
-  //     id: 3,
-  //     nom: "Produit 1",
-  //     prix: "29",
-  //     categories: [
-  //       "categorie1",
-  //       "categorie2",
-  //     ],
-  //     description: "Lorum ipsum",
-  //   },
-  //   {
-  //     id: 4,
-  //     nom: "Produit 2",
-  //     prix: "29",
-  //     categories: [
-  //       "categorie1",
-  //       "categorie2",
-  //     ],
-  //     description: "Lorum ipsum",
-  //   },
-  //   {
-  //     id: 5,
-  //     nom: "Produit 3",
-  //     prix: "29",
-  //     categories: [
-  //       "categorie1",
-  //       "categorie2",
-  //     ],
-  //     description: "Lorum ipsum",
-  //   },
-  //   {
-  //     id: 6,
-  //     nom: "Produit 4",
-  //     prix: "29",
-  //     categories: [
-  //       "categorie1",
-  //       "categorie2",
-  //     ],
-  //     description: "Lorum ipsum",
-  //   },
-  // ];
+  const dispatch = useDispatch();
+  const { products, error, loading } = useSelector((state) => state.products);
+  const { categories, errors, loadings } = useSelector((state) => state.categories);
 
+  useEffect(() => {
+    
+    let par = "categorie=" + params + "&";
+    dispatch(fetchProducts(id,par));
+  },[products])
+
+
+  useEffect(() => {
+    dispatch(fetchCategories(id));
+
+  },[categories,showProduct,params,lang])
+
+  let plainArray= [];
+
+  
+    for(let i = 0 ; i < (categories.length) ; i++){
+        plainArray.push(categories[i].title)
+      }
+  
+
+  const handleParam = (event) => {
+    setParams(event.target.value);
+  }
 
   return (
     <>
@@ -161,6 +124,9 @@ function Produits() {
       <div className='flex items-center mx-10 mt-4'>
         <div className='title'>Voici les produits de boutique 1 !</div>
         <div className='ml-auto'>
+          <Link to={`/categories/${id}`}>
+            <button className='greenButton mr-6'>Gérer les catégories</button>
+          </Link>
           <button className='greenButton' onClick={() => {newProduct();}}>Ajouter un produit</button>
         </div>
       </div>
@@ -169,37 +135,31 @@ function Produits() {
       <div className='flex mx-10 mt-4'>
         <div className='flex flex-col w-full'>
           <div className='flex flex-row mb-5'>
-            <div className='trie flex mr-5'>
-              <input
-                id="4"
-                // onChange={handleInputAfterChange}
-                // value={selectedAfterDate}
-                type="search"
-                placeholder='nom du produit'
-                className='search pl-3'
-              />
-              <button type="submit">Search</button>
-            </div>
+            
             <div className='trie'>
-              <select name="trie" className='search pl-2'>
+              <select name="trie" onChange={handleParam} className='search pl-2'>
                   <option value="">categorie</option>
-                  <option value="nbrde">nombre de </option>
+                  {plainArray && (
+                    plainArray.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))
+                  )}
               </select>
             </div>
-            <img alt='langue' src={langue} className='ml-auto w-6 h-6'/>
+            <img alt='langue' src={langue} onClick={()=>{lang === "fr" ? (setSelectedLang("en")) : (setSelectedLang("fr"))}} className='ml-auto w-6 h-6 cursor-pointer'/>
           </div>
           
-          <ProduitsListe onChange={handleProductChange} produits={Produits} />
+          <ProduitsListe onChange={handleProductChange} produits={products} lang={lang} />
         </div>
         
       </div>
 
    </div> 
    {showProduct === 1 ? 
-   (<PopUpProduct selectedProductName={selectedProductName} nameChange={handleInputNameChange} selectedProductPrice={selectedProductPrice} priceChange={handlePriceChange} selectedProductCat={selectedProductCat} catChange={handleCatChange} selectedProductDesc={selectedProductDesc} descChange={handleDescChange} firstButton={handleShowProduct} secondButton={editProductName} action="Modifier" />)
+   (<PopUpProduct selectedProductName={selectedProductName} nameChange={handleInputNameChange} selectedProductPrice={selectedProductPrice} priceChange={handlePriceChange} selectedProductCat={selectedProductCat} catChange={handleCatChange} selectedProductDesc={selectedProductDesc} descChange={handleDescChange} storeId={id} lang={lang} firstButton={handleShowProduct} secondButton={editProductName} action="Modifier" />)
    : (
     showProduct === 2 ?
-    (<PopUpProduct selectedProductName={selectedProductName} nameChange={handleInputNameChange} selectedProductPrice={selectedProductPrice} priceChange={handlePriceChange} selectedProductCat={selectedProductCat} catChange={handleCatChange} selectedProductDesc={selectedProductDesc} descChange={handleDescChange} firstButton={handleShowProduct} secondButton={createProduct} action="Créer" />)
+    (<PopUpProduct selectedProductName={selectedProductName} nameChange={handleInputNameChange} selectedProductPrice={selectedProductPrice} priceChange={handlePriceChange} selectedProductCat={selectedProductCat} catChange={handleCatChange} selectedProductDesc={selectedProductDesc} descChange={handleDescChange} storeId={id} lang={lang} firstButton={handleShowProduct} secondButton={createProduct} action="Créer" />)
     :(null)
    )
    }

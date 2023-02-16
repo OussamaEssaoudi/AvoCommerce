@@ -4,14 +4,21 @@ import './Produit.css';
 
 function Produit(props) {
 
-  function handleProductChange(newValue) {
-    props.onChange(newValue);
+  function handleProductChange() {
+    let product = {
+      id : props.id,
+      title : props.nom,
+      description : props.description,
+      price : props.prix,
+      categories : props.categories,
+    }
+    props.onChange(product);
   }
 
   return (
-    <div className="produit flex flex-col px-10 pt-5 mb-5 cursor-pointer" onClick={() => {handleProductChange(props.id)}}>
+    <div className="produit flex flex-col px-10 pt-5 mb-5 cursor-pointer" onClick={() => {handleProductChange()}}>
 
-      <div className='storeTitle'>{props.nom}</div>
+      {props.nom && (<div className='storeTitle'>{props.lang === "fr" ? props.nom.fr : props.nom.en}</div>)}
 
 
       <div className='flex flex-col'>

@@ -4,7 +4,7 @@ import Header from './../Header';
 import Filter from './../Filter';
 import BoutiquesListe from './BoutiquesListe';
 import PopUpStore from './PopUpStore';
-import { fetchShops } from '../redux/reducers/stores';
+import { fetchShops, addNewStore, editaStore } from '../redux/reducers/stores';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Boutiques() {
@@ -12,15 +12,116 @@ function Boutiques() {
   const [currentStore, setCurrentStore] = useState(0);
   const [showStore, setShowStore] = useState(0);
   const [selectedName, setSelectedName] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
-  const [selectedHours, setSelectedHours] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState(false);
+  const [selectedHours, setSelectedHours] = useState([
+    {
+        "day": "Lundi",
+        "periods": [
+          {
+              start: "00:00",
+              end: "00:00"
+          },
+          {
+            start: "00:00",
+            end: "00:00"
+          }
+        ],
+        "work" : false
+    },
+    {
+      "day": "Mardi",
+      "periods": [
+        {
+            start: "00:00",
+            end: "00:00"
+        },
+        {
+          start: "00:00",
+          end: "00:00"
+        }
+        ],
+        "work" : false
+    },
+    {
+      "day": "Mercredi",
+      "periods": [
+        {
+            start: "00:00",
+            end: "00:00"
+        },
+        {
+          start: "00:00",
+          end: "00:00"
+        }
+        ],
+        "work" : false
+    },
+    {
+      "day": "Jeudi",
+      "periods": [
+        {
+            start: "00:00",
+            end: "00:00"
+        },
+        {
+          start: "00:00",
+          end: "00:00"
+        }
+        ],
+        "work" : false
+    },
+    {
+      "day": "Vendredi",
+      "periods": [
+        {
+            start: "00:00",
+            end: "00:00"
+        },
+        {
+          start: "00:00",
+          end: "00:00"
+        }
+        ],
+        "work" : false
+    },
+    {
+      "day": "Samedi",
+      "periods": [
+        {
+            start: "00:00",
+            end: "00:00"
+        },
+        {
+          start: "00:00",
+          end: "00:00"
+        }
+        ],
+        "work" : false
+    },
+    {
+      "day": "Dimanche",
+      "periods": [
+          {
+              start: "00:00",
+              end: "00:00"
+          },
+          {
+            start: "00:00",
+            end: "00:00"
+          }
+        ],
+        "work" : true
+    }
+  ]);
   const [stores, setStores] = useState([]);
+  const [params, setParams] = useState("");
+  const [selectedSort, setSelectedSort] = useState("createdAt");
 
   function handleStoreChange(newValue) {
-    setCurrentStore(newValue);
-    setSelectedName(Boutiques[newValue].nom);
-    setSelectedStatus(Boutiques[newValue].status);
-    setSelectedHours(Boutiques[newValue].hours);
+    setCurrentStore(newValue.id);
+    setSelectedName(newValue.title);
+    setSelectedStatus(newValue.isOpen);
+    setSelectedHours(newValue.opening_hours);
     setShowStore(1);
   }
 
@@ -45,10 +146,13 @@ function Boutiques() {
 
   //bouton modifier boutique
   function editStore() {
-    Boutiques[currentStore].nom = selectedName;
-    Boutiques[currentStore].status = selectedStatus;
-    Boutiques[currentStore].hours = selectedHours;
-    console.log(Boutiques[currentStore]);
+    let store = {
+      "title": selectedName,
+      "isOpen": selectedStatus,
+      "products": [],
+      "opening_hours": selectedHours,
+  }
+    editaStore(store, currentStore);
     handleShowStore(0);
   }
 
@@ -56,33 +160,41 @@ function Boutiques() {
   function newStore() {
     handleShowStore(2);
   }
+  
+	const userID = JSON.parse(localStorage.getItem("userID"));
 
   //bouton cree boutique
   function createStore() {
     let store = {
-      id: (Boutiques[Boutiques.length-1].id + 1),
-      nom: selectedName,
-      status: selectedStatus,
-      hours: selectedHours,
-    };
-    Boutiques.push(store);
-    console.log(Boutiques[Boutiques.length-1]);
+          "CreatedBy": userID,
+          "title": selectedName,
+          "isOpen": selectedStatus,
+          "products": [],
+          "opening_hours": selectedHours,
+    }
+    addNewStore(store);
     handleShowStore(0);
   }
 
-  // const getBoutiques = async () => {
-  //   const response = await fetchShops();
-  //   setStores(response);
-  // }
+  const handleSortChange = (event) => {
+    setSelectedSort(event.target.value);
+  }
 
   const dispatch = useDispatch();
   const { shops, error, loading } = useSelector((state) => state.shops);
 
 
   useEffect(() => {
-    dispatch(fetchShops());
-  },[dispatch])
+    // setParams(params + "sort=" + selectedSort)
+    let par = params + "sort=" + selectedSort + "&";
+    dispatch(fetchShops(par));
+  },[dispatch,showStore,params,selectedSort])
   
+  // useEffect(() => {
+  //   console.log("t")
+  // },[showStore])
+
+
   // let Boutiques = [
   //   {
   //     id: 0,
@@ -335,20 +447,20 @@ function Boutiques() {
       <div className='flex items-center mx-10 mt-4'>
         <div className='title'>Bonjour Oussama, voici vos boutiques ! </div>
         <div className='ml-auto'>
-          <button className='greenButton mr-6' onClick={() => {console.log(stores);}}>Gérer les catégories</button>
           <button className='greenButton' onClick={() => {newStore();}}>Créer une boutique</button>
         </div>
       </div>
 
 
       <div className='flex mx-10 mt-4'>
-        <Filter/>
+        <Filter params={params} onChange={setParams} />
         <div className='flex flex-col ml-10 w-full'>
           <div className='trie mb-5'>
             <label className='pl-3'>trier par</label>
-            <select name="trie" className='pl-2'>
-                <option value="nbr">nombre de produits</option>
-                <option value="nbrde">nombre de </option>
+            <select name="trie" value={selectedSort} onChange={handleSortChange} className='pl-2'>
+                <option value="createdAt">Date de création</option>
+                <option value="Nb_products">Nombre de produits</option>
+                <option value="title">Nom</option>
             </select>
           </div>
           <BoutiquesListe onChange={handleStoreChange} boutiques={shops}/>

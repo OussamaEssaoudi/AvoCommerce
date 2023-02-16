@@ -5,7 +5,7 @@
 
     position: absolute;
     width: 605px;
-    height: 471px;
+    height: 570px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -60,7 +60,7 @@
 
 .inputProductDesc {
     width: 415px;
-    height: 126.17px;
+    height: 70px;
     background: #EDE6E2;
     border-radius: 5px;
     font-family: 'Inter';

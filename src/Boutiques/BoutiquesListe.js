@@ -15,7 +15,7 @@ function BoutiquesListe(props) {
   }
 
   const nextPage = () => {
-    if (props.boutiques.length > currentItems+1) setCurrentItems(currentItems+2);
+    if (props.boutiques.length > currentItems+2) setCurrentItems(currentItems+2);
   }
   
   const previousPage = () => {
@@ -25,12 +25,12 @@ function BoutiquesListe(props) {
   return (
     <div>
       
-        {props.boutiques[currentItems] ? (<Boutique id={props.boutiques[currentItems].id}  nom={props.boutiques[currentItems].title} nbProduit={props.boutiques[currentItems].products ? (props.boutiques[currentItems].products.length) : 0} nbCategorie={props.boutiques[currentItems].categories ? (props.boutiques[currentItems].categories.length) : 0} status={props.boutiques[currentItems].isOpen} date={props.boutiques[currentItems].createdAt} onChange={handleStoreChange} produits={props.boutiques[currentItems].products} />) : (null)}
-        {props.boutiques[currentItems+1] ? (<Boutique key={props.boutiques[currentItems+1].id} id={props.boutiques[currentItems+1].id}  nom={props.boutiques[currentItems+1].nom} nbProduit={props.boutiques[currentItems+1].nbProduit} nbCategorie={props.boutiques[currentItems+1].nbCategorie} status={props.boutiques[currentItems+1].status} date={props.boutiques[currentItems+1].date} onChange={handleStoreChange} produits={props.boutiques[currentItems].produits} />) : (<div className='emptyBoutique mb-5'></div>)}
+        {props.boutiques[currentItems] ? (<Boutique key={props.boutiques[currentItems]._id} id={props.boutiques[currentItems]._id}  nom={props.boutiques[currentItems].title} nbProduit={props.boutiques[currentItems].Nb_products} nbCategorie={props.boutiques[currentItems].Nb_Categories} status={props.boutiques[currentItems].isOpen} hours={props.boutiques[currentItems].opening_hours} date={props.boutiques[currentItems].createdAt} onChange={handleStoreChange} produits={props.boutiques[currentItems].products} />) : (<div className='emptyBoutique mb-5'></div>)}
+        {props.boutiques[currentItems+1] ? (<Boutique key={props.boutiques[currentItems+1]._id} id={props.boutiques[currentItems+1]._id}  nom={props.boutiques[currentItems+1].title} nbProduit={props.boutiques[currentItems+1].Nb_products} nbCategorie={props.boutiques[currentItems+1].Nb_Categories} status={props.boutiques[currentItems+1].isOpen} date={props.boutiques[currentItems+1].createdAt} onChange={handleStoreChange} produits={props.boutiques[currentItems].produits} />) : (<div className='emptyBoutique mb-5'></div>)}
         
         <div className='flex justify-center'>
           <img alt='previous' src={left} className={'mr-6 cursor-pointer' + (currentItems !== 0 ? '' : 'pointer-events-none opacity-50')} onClick={previousPage}/>
-          <img alt='next' src={right} className={(props.boutiques.length > currentItems+1 ? 'cursor-pointer' : 'pointer-events-none opacity-50')} onClick={nextPage}/>
+          <img alt='next' src={right} className={(props.boutiques.length > currentItems+2 ? 'cursor-pointer' : 'pointer-events-none opacity-50')} onClick={nextPage}/>
         </div>
     </div>
   );

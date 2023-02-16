@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Login.css';
 import logo from './../img/avocado.png';
 import { useDispatch } from 'react-redux';
-import { postLogin } from '../Services/Api';
+import { postLogin } from '../redux/reducers/useSlice';
 import {Toaster} from 'react-hot-toast';
 
 

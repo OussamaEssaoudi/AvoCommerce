@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Multiselect } from "multiselect-react-dropdown";
 import './PopUpStore.css';
+import PopUpHours from './PopUpHours';
 
 
 function PopUpStore(props) {
@@ -9,6 +10,7 @@ function PopUpStore(props) {
   const [selectedStoreName, setSelectedStoreName] = useState(props.selectedName);
   const [selectedStoreStatus, setSelectedStoreStatus] = useState(props.selectedStatus);
   const [selectedStoreHours, setSelectedStoreHours] = useState(props.selectedHours);
+  const [showHours, setShowHours] = useState(0);
 
   function handleStoreNameChange(event) {
     setSelectedStoreName(event.target.value);
@@ -16,28 +18,131 @@ function PopUpStore(props) {
   }
 
   function handleStoreStatusChange(event) {
-    setSelectedStoreStatus(event.target.value);
-    props.priceChange(event.target.value);
+    setSelectedStoreStatus(event.target.value === 'true');
+    props.statusChange(event.target.value === 'true');
   }
 
-  function handleStoreHoursChange(event) {
-    setSelectedStoreHours(event.target.value);
-    props.descChange(event.target.value);
+  function handleStoreHoursChange(value) {
+    setSelectedStoreHours(value);
+    props.hoursChange(value);
   }
 
   function action() {
     props.secondButton();
   }
 
-  function handleShowProduct() {
+  function handleShowStore() {
     props.nameChange("");
     props.statusChange("");
-    props.hoursChange([]);
+    props.hoursChange([
+      {
+          "day": "Lundi",
+          "periods": [
+            {
+                start: "00:00",
+                end: "00:00"
+            },
+            {
+              start: "00:00",
+              end: "00:00"
+            }
+          ],
+          "work" : false
+      },
+      {
+        "day": "Mardi",
+        "periods": [
+          {
+              start: "00:00",
+              end: "00:00"
+          },
+          {
+            start: "00:00",
+            end: "00:00"
+          }
+          ],
+          "work" : false
+      },
+      {
+        "day": "Mercredi",
+        "periods": [
+          {
+              start: "00:00",
+              end: "00:00"
+          },
+          {
+            start: "00:00",
+            end: "00:00"
+          }
+          ],
+          "work" : false
+      },
+      {
+        "day": "Jeudi",
+        "periods": [
+          {
+              start: "00:00",
+              end: "00:00"
+          },
+          {
+            start: "00:00",
+            end: "00:00"
+          }
+          ],
+          "work" : false
+      },
+      {
+        "day": "Vendredi",
+        "periods": [
+          {
+              start: "00:00",
+              end: "00:00"
+          },
+          {
+            start: "00:00",
+            end: "00:00"
+          }
+          ],
+          "work" : false
+      },
+      {
+        "day": "Samedi",
+        "periods": [
+          {
+              start: "00:00",
+              end: "00:00"
+          },
+          {
+            start: "00:00",
+            end: "00:00"
+          }
+          ],
+          "work" : false
+      },
+      {
+        "day": "Dimanche",
+        "periods": [
+            {
+                start: "00:00",
+                end: "00:00"
+            },
+            {
+              start: "00:00",
+              end: "00:00"
+            }
+          ],
+          "work" : true
+      }
+    ]);
     props.firstButton(0);
   }
 
+  function handleShowHours() {
+    setShowHours(0);
+  }
+
   return (
-    <div className='showStore'>
+    showHours === 0 ? (<div className='showStore'>
       <div className='flex flex-col h-full items-center justify-center'>
 
         <div className='widthBox'>
@@ -58,24 +163,25 @@ function PopUpStore(props) {
           <div>
             <div className='titleInput mb-3'>Statut :</div>
             <select onChange={handleStoreStatusChange} value={selectedStoreStatus} className="inputStoreName">
-              <option>En congé</option>
-              <option>Ouvert</option>
+              <option value={false}>En congé</option>
+              <option value={true}>Ouvert</option>
             </select>
           </div>
         </div>
 
         <div className='widthBox'>
-          <div className='titleInput underline cursor-pointer mb-12'>Définir les horaires d’ouverture</div>
+          <div className='titleInput underline cursor-pointer mb-12' onClick={() => {setShowHours(1)}}>Définir les horaires d’ouverture</div>
         </div>
         
 
         <div className='flex flex-row'>
-          <button className='grayButton mr-5' onClick={handleShowProduct}>Annuler</button>
+          <button className='grayButton mr-5' onClick={handleShowStore}>Annuler</button>
           <button className='greenButton' onClick={action}>{props.action}</button>
         </div>
 
       </div>
-   </div>
+   </div>) :
+   (<PopUpHours selectedHours={selectedStoreHours} hoursChange={handleStoreHoursChange} firstButton={handleShowHours} secondButton={handleShowHours} action="Valider" />)
   );
 }
 

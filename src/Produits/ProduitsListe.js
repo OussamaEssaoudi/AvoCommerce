@@ -24,7 +24,7 @@ function ProduitsListe(props) {
   const list = []
 
   for(let i = currentItems ; i < (currentItems+6) ; i++){
-    list.push(props.produits[i] ? (<Produit key={props.produits[i].id} id={(props.produits[i].id)*10}  nom={props.produits[i].nom} prix={props.produits[i].prix} onChange={handleProductChange} />) : (<div  key={i*10} className='emptyProduit mb-5'></div>))
+    list.push(props.produits[i] ? (<Produit key={props.produits[i]._id} id={props.produits[i]._id}  nom={props.produits[i].title} description={props.produits[i].description} prix={props.produits[i].price} categories={props.produits[i].categories} lang={props.lang} onChange={handleProductChange} />) : (<div  key={i} className='emptyProduit mb-5'></div>))
   }
 
   return (

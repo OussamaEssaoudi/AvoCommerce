@@ -5,12 +5,16 @@ import './Categorie.css';
 function Categorie(props) {
 
 
-  function handleCategorieChange(newValue) {
-    props.onChange(newValue);
+  function handleCategorieChange() {
+    let cat = {
+      id : props.id,
+      title: props.nom
+    }
+    props.onChange(cat);
   }
 
   return (
-    <div className="categorie flex flex-col px-10 pt-5 mb-10 cursor-pointer" onClick={() => {handleCategorieChange(props.id)}}>
+    <div className="categorie flex flex-col px-10 pt-5 mb-10 cursor-pointer" onClick={() => {handleCategorieChange()}}>
 
       <div className='categorieTitle'>{props.nom}</div>
 

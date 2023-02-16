@@ -13,8 +13,8 @@ function App() {
     <Router>
       <RouteLinks path='/' exact component={Login} /> 
       <PrivateRoute path='/boutiques' exact component={Boutiques}/>
-      <PrivateRoute path='/produits' exact component={Produits}/>
-      <PrivateRoute path='/categories' exact component={Categories}/>
+      <PrivateRoute path='/produits/:id' exact component={Produits}/>
+      <PrivateRoute path='/categories/:id' exact component={Categories}/>
     </Router> 
   );
 }
