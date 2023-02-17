@@ -5,6 +5,7 @@ import axios from "axios";
 
 export const addShop = createAction("ADD_SHOP");
 export const editShop = createAction("EDIT_SHOP");
+export const deleteShop = createAction("DELETE_SHOP");
 
 const initialState = {
   shops: [],
@@ -36,6 +37,10 @@ const shopsSlice = createSlice({
       const index = state.shops.findIndex(shop => shop.id === id);
       state.shops[index] = { ...state.shops[index], ...updates };
     },
+    deleteShop: (state, action) => {
+      const idToDelete = action.payload;
+      state.shops = state.shops.filter(shop => shop.id !== idToDelete);
+    },
   },
 });
 
@@ -49,7 +54,7 @@ const URL = 'http://localhost:8080';
 export function fetchShops(params) {
   return async (dispatch) => {
     try {
-        const token = JSON.parse(localStorage.getItem('token'));
+        const token = JSON.parse(localStorage.getItem('user'));
         const headers = {
           Authorization: `Bearer ${token}`,
         };
@@ -99,6 +104,22 @@ export async function editaStore(store,id) {
     console.log(store);
     const response = await axios.put(`${URL}/api/store/edit/${id}`, store, config);
     editShop(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteaStore(id) {
+  try {
+    const token = JSON.parse(localStorage.getItem('user'));
+    console.log(token);
+    const config = {
+      headers: {
+        token: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.delete(`${URL}/api/store/${id}`, config);
+    deleteShop(response.data._id);
   } catch (error) {
     console.error(error);
   }

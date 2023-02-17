@@ -25,7 +25,7 @@ function CategoriesListe(props) {
   const list = []
 
   for(let i = currentItems ; i < (currentItems+12) ; i++){
-    list.push(props.categories[i] ? (<Categorie key={props.categories[i]._id} id={props.categories[i]._id}  nom={props.categories[i].title} onChange={handleCategorieChange} />) : (<div  key={i} className='emptyCategorie mb-10'></div>))
+    list.push(props.categories[i] ? (<Categorie key={props.categories[i]._id} id={props.categories[i]._id}  nom={props.categories[i].title} onChange={handleCategorieChange} delete={props.delete} />) : (<div  key={i} className='emptyCategorie mb-10'></div>))
   }
 
   return (

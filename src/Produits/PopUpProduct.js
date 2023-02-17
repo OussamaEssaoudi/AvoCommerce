@@ -16,6 +16,7 @@ function PopUpProduct(props) {
   const [selectedProductDescEn, setSelectedProductDescEn] = useState(props.selectedProductDesc.en);
   const [selectedProductPrice, setSelectedProductPrice] = useState(props.selectedProductPrice);
   const [selectedProductCat, setSelectedProductCat] = useState(props.selectedProductCat);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   function handleProductNameFrChange(event) {
     setSelectedProductNameFr(event.target.value);
@@ -54,7 +55,7 @@ function handleProductDescEnChange(event) {
     let product = {
       "title": name,
       "description": desc,
-      "categories": selectedProductCat,
+      "categories": selectedCategories,
       "price": selectedProductPrice
     }
     props.secondButton(product);
@@ -75,6 +76,7 @@ function handleProductDescEnChange(event) {
     for(let i = 0 ; i < (selectedList.length) ; i++){
       selectedCat.push(cateId[plainArray.indexOf(selectedList[i])])
     }
+    setSelectedCategories(selectedCat);
     props.catChange(selectedCat);
   }
 
@@ -85,6 +87,7 @@ function handleProductDescEnChange(event) {
     for(let i = 0 ; i < (selectedList.length) ; i++){
       selectedCat.push(cateId[plainArray.indexOf(selectedList[i])])
     }
+    setSelectedCategories(selectedCat);
     props.catChange(selectedCat);
   }
 
@@ -94,7 +97,7 @@ function handleProductDescEnChange(event) {
 
 
   useEffect(() => {
-    dispatch(fetchCategories(props.storeId));
+    dispatch(fetchCategories(props.storeId,''));
   },[dispatch])
 
 

@@ -13,6 +13,7 @@ export const userSlice =  createSlice({
             state.user = action.payload;
             localStorage.setItem('user', JSON.stringify(state.user.accessToken));
             localStorage.setItem('userID', JSON.stringify(state.user._id));
+            localStorage.setItem('userObject', JSON.stringify(state.user));
         },
         logout: (state) => {
             state.user = null;
@@ -54,5 +55,17 @@ export const postLogin = (state) => {
             dispatch(loginError(error.message))
               // dispatch(loginError(error.response.data.non_field_errors[0]))
           }
+      };
+  };
+
+  export const postLogout = () => {
+      return async (dispatch) => {
+  
+              dispatch(logout());
+              toast.success("You are successfully disconected")
+              setTimeout(() => { 
+                  window.location.reload();
+              }, 800)
+         
       };
   };

@@ -39,6 +39,10 @@ const categoriesSlice = createSlice({
       const index = state.categories.findIndex(categorie => categorie.id === id);
       state.categories[index] = { ...state.categories[index], ...updates };
     },
+    deleteCategorie(state, action) {
+      const idToDelete = action.payload;
+      state.categories = state.categories.filter(categorie => categorie.id !== idToDelete);
+    },
   },
 });
 
@@ -46,7 +50,7 @@ export const { getCategoriesStart, getCategoriesSuccess, getCategoriesError } = 
 
 export default categoriesSlice.reducer;
 
-export function fetchCategories(store) {
+export function fetchCategories(store,param) {
   return async (dispatch) => {
     try {
       const token = JSON.parse(localStorage.getItem('user'));
@@ -54,10 +58,10 @@ export function fetchCategories(store) {
         Authorization: `Bearer ${token}`,
       };
       dispatch(getCategoriesStart());
-      const response = await axios.get(`${URL}/api/categorie/ByStore/${store}`, { headers });
+      const response = await axios.get(`${URL}/api/categorie/ByStore/${store}?${param}`, { headers });
       dispatch(getCategoriesSuccess(response.data));
     } catch (error) {
-      if (error.response.status === 404) {console.log('hb')
+      if (error.response.status === 404) {
       }
       else if (error.response && error.response.status === 401) {
         // Si le jeton d'authentification n'est pas valide ou s'il n'est pas présent,
@@ -97,6 +101,21 @@ export async function editaCategorie(categorie,id) {
     };
     const response = await axios.put(`${URL}/api/categorie/${id}`, categorie, config);
     editCategorie(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteaCategorie(id) {
+  try {
+    const token = JSON.parse(localStorage.getItem('user'));
+    const config = {
+      headers: {
+        token: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.delete(`${URL}/api/categorie/${id}`, config);
+    deleteCategorie(response.data);
   } catch (error) {
     console.error(error);
   }

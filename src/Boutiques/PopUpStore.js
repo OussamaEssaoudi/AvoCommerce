@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Multiselect } from "multiselect-react-dropdown";
 import './PopUpStore.css';
+import moment from 'moment';
 import PopUpHours from './PopUpHours';
 
 
@@ -140,13 +141,15 @@ function PopUpStore(props) {
   function handleShowHours() {
     setShowHours(0);
   }
+  
+  const formated = moment(props.date).format('DD MMM, YYYY');
 
   return (
     showHours === 0 ? (<div className='showStore'>
       <div className='flex flex-col h-full items-center justify-center'>
 
         <div className='widthBox'>
-          <div className='title3 mb-8'>Crée le 09/12/2022</div>
+          {props.date && (<div className='title3 mb-8'>Crée le {formated}</div>)}
         </div>
 
         <div className='flex flex-row mb-5'>

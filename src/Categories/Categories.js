@@ -5,7 +5,7 @@ import langue from './../img/i18.png';
 import CategoriesListe from './CategoriesListe';
 import PopUpCategorie from './PopUpCategorie';
 import { useParams } from 'react-router-dom';
-import { addNewCategorie, editaCategorie, fetchCategories } from '../redux/reducers/categories';
+import { addNewCategorie, editaCategorie, fetchCategories, deleteaCategorie } from '../redux/reducers/categories';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Categories() {
@@ -17,6 +17,8 @@ function Categories() {
   const [showCategorie, setShowCategorie] = useState(0);
   const [selectedInputCat, setSelectedInputCat] = useState("");
   const [refresh, setRefresh] = useState(0);
+  const [deleted, setDeleted] = useState(false);
+  const [search, setSearch] = useState("");
 
   function handleCategorieChange(newValue) {
     setCurrentCategorie(newValue.id);
@@ -26,6 +28,15 @@ function Categories() {
 
   function handleShowCategorie(value) {
     setShowCategorie(value);
+  }
+
+  function handleSearch() {
+    setRefresh(refresh+1);
+  }
+
+  //input search categorie
+  function handleInputSearchChange(event) {
+    setSearch(event.target.value);
   }
 
   //input nom categorie
@@ -45,6 +56,12 @@ function Categories() {
     setRefresh(1);
   }
 
+  //bouton supprimer categorie
+  function deleteCategorie(id) {
+    deleteaCategorie(id);
+    setDeleted(!deleted);
+  }
+
   //Bouton Ajouter categorie
   function newCategorie() {
     handleShowCategorie(2);
@@ -52,6 +69,7 @@ function Categories() {
 
   
 	const userID = JSON.parse(localStorage.getItem("userID"));
+  const user = JSON.parse(localStorage.getItem('userObject'));
 
   //bouton cree categorie
   function createCategorie() {
@@ -71,63 +89,16 @@ function Categories() {
 
 
   useEffect(() => {
-    dispatch(fetchCategories(id));
-  },[dispatch,showCategorie,refresh])
+    const timeoutId = setTimeout(() => {
+      let par = "categorie=" + search;
+      dispatch(fetchCategories(id,par));
+    }, 200);
+    
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  },[dispatch,showCategorie,refresh,deleted])
 
-  // let Categories = [
-  //   {
-  //     id: 0,
-  //     nom: "Categorie 1",
-  //   },
-  //   {
-  //     id: 1,
-  //     nom: "Categorie 2",
-  //   },
-  //   {
-  //     id: 2,
-  //     nom: "Categorie 3",
-  //   },
-  //   {
-  //     id: 3,
-  //     nom: "Categorie 4",
-  //   },
-  //   {
-  //     id: 4,
-  //     nom: "Categorie 5",
-  //   },
-  //   {
-  //     id: 5,
-  //     nom: "Categorie 6",
-  //   },
-  //   {
-  //     id: 6,
-  //     nom: "Categorie 7",
-  //   },
-  //   {
-  //     id: 7,
-  //     nom: "Categorie 8",
-  //   },
-  //   {
-  //     id: 8,
-  //     nom: "Categorie 9",
-  //   },
-  //   {
-  //     id: 9,
-  //     nom: "Categorie 10",
-  //   },
-  //   {
-  //     id: 10,
-  //     nom: "Categorie 11",
-  //   },
-  //   {
-  //     id: 11,
-  //     nom: "Categorie 12",
-  //   },
-  //   {
-  //     id: 12,
-  //     nom: "Categorie 13",
-  //   },
-  // ];
 
   return (
     <>
@@ -136,10 +107,11 @@ function Categories() {
       <Header/>
 
       <div className='flex items-center mx-10 mt-4'>
-        <div className='title'>Voici les catégories de boutique 1 !</div>
+        <div className='title'>Voici les catégories de la boutique !</div>
+        {(user.isAdmin) && (
         <div className='ml-auto'>
           <button className='greenButton' onClick={() => {newCategorie();}}>Ajouter une categorie</button>
-        </div>
+        </div>)}
       </div>
 
 
@@ -148,16 +120,16 @@ function Categories() {
             <div className='trie flex mr-5 mb-5'>
               <input
                 id="4"
-                // onChange={handleInputAfterChange}
-                // value={selectedAfterDate}
+                onChange={handleInputSearchChange}
+                value={search}
                 type="search"
                 placeholder='nom d’une catégorie'
                 className='search pl-3'
               />
-              <button type="submit">Search</button>
+              <button className='searchButton' onClick={() => {handleSearch();}}>Search</button>
             </div>
           
-          <CategoriesListe onChange={handleCategorieChange} categories={categories}/>
+          <CategoriesListe onChange={handleCategorieChange} delete={deleteCategorie} categories={categories}/>
         </div>
         
       </div>

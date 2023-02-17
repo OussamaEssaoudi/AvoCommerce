@@ -4,7 +4,7 @@ import Header from './../Header';
 import Filter from './../Filter';
 import BoutiquesListe from './BoutiquesListe';
 import PopUpStore from './PopUpStore';
-import { fetchShops, addNewStore, editaStore } from '../redux/reducers/stores';
+import { fetchShops, addNewStore, editaStore, deleteaStore } from '../redux/reducers/stores';
 import { useSelector, useDispatch } from 'react-redux';
 
 function Boutiques() {
@@ -110,18 +110,22 @@ function Boutiques() {
             end: "00:00"
           }
         ],
-        "work" : true
+        "work" : false
     }
   ]);
+  const [selectedCreationDate, setSelectedCreationDate] = useState('');
   const [stores, setStores] = useState([]);
   const [params, setParams] = useState("");
   const [selectedSort, setSelectedSort] = useState("createdAt");
+  const [deleted, setDeleted] = useState(false);
+
 
   function handleStoreChange(newValue) {
     setCurrentStore(newValue.id);
     setSelectedName(newValue.title);
     setSelectedStatus(newValue.isOpen);
     setSelectedHours(newValue.opening_hours);
+    setSelectedCreationDate(newValue.date);
     setShowStore(1);
   }
 
@@ -156,12 +160,19 @@ function Boutiques() {
     handleShowStore(0);
   }
 
+  //bouton supprimer boutique
+  function deleteStore(id) {
+    deleteaStore(id);
+    setDeleted(!deleted);
+  }
+
   //Bouton Ajouter boutique
   function newStore() {
     handleShowStore(2);
   }
   
 	const userID = JSON.parse(localStorage.getItem("userID"));
+  const user = JSON.parse(localStorage.getItem('userObject'));
 
   //bouton cree boutique
   function createStore() {
@@ -185,10 +196,16 @@ function Boutiques() {
 
 
   useEffect(() => {
-    // setParams(params + "sort=" + selectedSort)
+    const timeoutId = setTimeout(() => {
+      // setParams(params + "sort=" + selectedSort)
     let par = params + "sort=" + selectedSort + "&";
     dispatch(fetchShops(par));
-  },[dispatch,showStore,params,selectedSort])
+    }, 200);
+    
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  },[dispatch,showStore,params,selectedSort,deleted])
   
   // useEffect(() => {
   //   console.log("t")
@@ -445,10 +462,11 @@ function Boutiques() {
       <Header/>
 
       <div className='flex items-center mx-10 mt-4'>
-        <div className='title'>Bonjour Oussama, voici vos boutiques ! </div>
+        <div className='title'>Bonjour {user.username}, voici vos boutiques ! </div>
+        {(user.isAdmin || user.isVendorDeliveryMan) && (
         <div className='ml-auto'>
           <button className='greenButton' onClick={() => {newStore();}}>Créer une boutique</button>
-        </div>
+        </div>)}
       </div>
 
 
@@ -463,14 +481,14 @@ function Boutiques() {
                 <option value="title">Nom</option>
             </select>
           </div>
-          <BoutiquesListe onChange={handleStoreChange} boutiques={shops}/>
+          <BoutiquesListe onChange={handleStoreChange} delete={deleteStore} boutiques={shops}/>
         </div>
         
       </div>
 
       </div> 
    {showStore === 1 ? 
-   (<PopUpStore selectedName={selectedName} nameChange={handleNameChange} selectedStatus={selectedStatus} statusChange={handleStatusChange} selectedHours={selectedHours} hoursChange={handleHoursChange} onChange={handleStoreChange} firstButton={handleShowStore} secondButton={editStore} action="Modifier" />)
+   (<PopUpStore selectedName={selectedName} nameChange={handleNameChange} selectedStatus={selectedStatus} statusChange={handleStatusChange} selectedHours={selectedHours} date={selectedCreationDate} hoursChange={handleHoursChange} onChange={handleStoreChange} firstButton={handleShowStore} secondButton={editStore} action="Modifier" />)
    : (
     showStore === 2 ?
     (<PopUpStore selectedName={selectedName} nameChange={handleNameChange} selectedStatus={selectedStatus} statusChange={handleStatusChange} selectedHours={selectedHours} hoursChange={handleHoursChange} onChange={handleStoreChange} firstButton={handleShowStore} secondButton={createStore} action="Créer" />)

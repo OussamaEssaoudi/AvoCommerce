@@ -12,12 +12,19 @@ function Boutique(props) {
       title : props.nom,
       isOpen : props.status,
       opening_hours : props.hours,
+      date : props.date,
     }
 
     props.onChange(store);
   }
   
   const formated = moment(props.date).format('DD MMM, YYYY');
+
+  function deleteStore() {
+    props.delete(props.id);
+  }
+
+  const user = JSON.parse(localStorage.getItem('userObject'));
 
   return (
     <div className="boutique flex flex-col px-10 pt-5 mb-5">
@@ -45,11 +52,14 @@ function Boutique(props) {
           <div className='number'>{props.nbCategorie}</div>
         </div>
 
-        <div className='ml-auto mt-10'>
+        <div className='ml-auto mt-10 flex flex-row justify-center'>
           <Link to={`/produits/${props.id}`}>
             <button className='storeButton'>Ouvrir</button>
           </Link>
-          <button className='ml-5 storeButton' onClick={() => {handleStoreChange()}}>Modifier</button>
+          {(user.isAdmin || user.isVendorDeliveryMan) && (<button className='ml-5 storeButton' onClick={() => {handleStoreChange()}}>Consulter</button>)}
+          {(user.isAdmin || user.isVendorDeliveryMan) && (<div>
+            <img className='ml-5 cursor-pointer' src="https://img.icons8.com/material-rounded/24/c0c0c0/delete-trash.png" onClick={() => {deleteStore()}}/>
+          </div>)}
         </div>
 
      </div>

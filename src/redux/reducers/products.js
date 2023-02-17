@@ -5,6 +5,7 @@ import axios from "axios";
 
 export const addProduct = createAction("ADD_PRODUCT");
 export const editProduct = createAction("EDIT_PRODUCT");
+export const deleteProduct = createAction("DELETE_PRODUCT");
 
 const initialState = {
   products: [],
@@ -30,13 +31,17 @@ const productsSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    [addProduct]: (state, action) => {
+    addProduct: (state, action) => {
       state.products = [...state.products, action.payload];
     },
     editProduct: (state, action) => {
       const { id, ...updates } = action.payload;
       const index = state.products.findIndex(product => product.id === id);
       state.products[index] = { ...state.products[index], ...updates };
+    },
+    deleteProduct(state, action) {
+      const idToDelete = action.payload;
+      state.products = state.products.filter(product => product.id !== idToDelete);
     },
   },
 });
@@ -47,24 +52,27 @@ export default productsSlice.reducer;
 
 export function fetchProducts(store,params) {
   return async (dispatch) => {
-    try {
+    
       const token = JSON.parse(localStorage.getItem('user'));
       const headers = {
         Authorization: `Bearer ${token}`,
       };
       dispatch(getProductsStart());
-      const response = await axios.get(`${URL}/api/product/ByStore/${store}?${params}`, { headers });
-      dispatch(getProductsSuccess(response.data));
-    } catch (error) {
-      if (error.response && error.response.status === 401) {
-        // Si le jeton d'authentification n'est pas valide ou s'il n'est pas présent,
-        // déconnectez l'utilisateur et affichez un message d'erreur
-        dispatch(logout());
-        dispatch(getProductsError('Vous devez vous connecter pour accéder à cette page'));
-      } else {
-        dispatch(getProductsError(error.message));
-      }
-    }
+      axios.get(`${URL}/api/product/ByStore/${store}?${params}`, { headers })
+      .then((response) => {
+        dispatch(getProductsSuccess(response.data));
+        return response.data;
+      })
+      .catch ((error) => {
+        if (error.response && error.response.status === 401) {
+          // Si le jeton d'authentification n'est pas valide ou s'il n'est pas présent,
+          // déconnectez l'utilisateur et affichez un message d'erreur
+          dispatch(logout());
+          dispatch(getProductsError('Vous devez vous connecter pour accéder à cette page'));
+        } else {
+          dispatch(getProductsError(error.message));
+        }
+      });
   };
 }
 
@@ -92,7 +100,22 @@ export async function editaProduct(product,id) {
       },
     };
     const response = await axios.put(`${URL}/api/product/${id}`, product, config);
-    editProduct(response.data);
+    editProduct(response.data._id,product);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteaProduct(id) {
+  try {
+    const token = JSON.parse(localStorage.getItem('user'));
+    const config = {
+      headers: {
+        token: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.delete(`${URL}/api/product/${id}`, config);
+    deleteProduct(response.data._id);
   } catch (error) {
     console.error(error);
   }

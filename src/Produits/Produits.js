@@ -5,7 +5,7 @@ import Header from './../Header';
 import langue from './../img/i18.png';
 import ProduitsListe from './ProduitsListe';
 import PopUpProduct from './PopUpProduct';
-import { addNewProduct, editaProduct, fetchProducts } from '../redux/reducers/products';
+import { addNewProduct, editaProduct, fetchProducts, deleteaProduct } from '../redux/reducers/products';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategories } from '../redux/reducers/categories';
 import processPlugins from 'tailwindcss/lib/util/processPlugins';
@@ -23,6 +23,7 @@ function Produits() {
   const [selectedProductDesc, setSelectedProductDesc] = useState({});
   const [selectedProductCat, setSelectedProductCat] = useState([]);
   const [params, setParams] = useState("");
+  const [deleted, setDeleted] = useState(false);
 
   function handleProductChange(newValue) {
     setCurrentProduct(newValue.id);
@@ -58,12 +59,15 @@ function Produits() {
   }
 
   //bouton modifier produit
-  function editProductName(product) {
-    
-    console.log(product)
-    console.log(currentProduct)
+  function editProductDetails(product) {
     editaProduct(product,currentProduct);
     handleShowProduct(0);
+  }
+
+  //bouton supprimer produit
+  function deleteProduct(id) {
+    deleteaProduct(id);
+    setDeleted(!deleted);
   }
 
   //Bouton Ajouter Produit
@@ -72,6 +76,7 @@ function Produits() {
   }
 
 	const userID = JSON.parse(localStorage.getItem("userID"));
+  const user = JSON.parse(localStorage.getItem('userObject'));
 
   //bouton cree Produit
   function createProduct(prod) {
@@ -92,16 +97,18 @@ function Produits() {
   const { categories, errors, loadings } = useSelector((state) => state.categories);
 
   useEffect(() => {
+
+    const timeoutId = setTimeout(() => {
+      let par = "categorie=" + params + "&";
+      dispatch(fetchProducts(id,par));
+      dispatch(fetchCategories(id));
+    }, 100);
     
-    let par = "categorie=" + params + "&";
-    dispatch(fetchProducts(id,par));
-  },[products])
+    return () => {
+      clearTimeout(timeoutId);
+    };
 
-
-  useEffect(() => {
-    dispatch(fetchCategories(id));
-
-  },[categories,showProduct,params,lang])
+  },[params,lang,showProduct,deleted])
 
   let plainArray= [];
 
@@ -122,12 +129,13 @@ function Produits() {
       <Header/>
 
       <div className='flex items-center mx-10 mt-4'>
-        <div className='title'>Voici les produits de boutique 1 !</div>
+        <div className='title'>Voici les produits de la boutique !</div>
         <div className='ml-auto'>
           <Link to={`/categories/${id}`}>
             <button className='greenButton mr-6'>Gérer les catégories</button>
           </Link>
-          <button className='greenButton' onClick={() => {newProduct();}}>Ajouter un produit</button>
+          {(user.isAdmin || user.isVendorDeliveryMan) && (
+          <button className='greenButton' onClick={() => {newProduct();}}>Ajouter un produit</button>)}
         </div>
       </div>
 
@@ -149,14 +157,14 @@ function Produits() {
             <img alt='langue' src={langue} onClick={()=>{lang === "fr" ? (setSelectedLang("en")) : (setSelectedLang("fr"))}} className='ml-auto w-6 h-6 cursor-pointer'/>
           </div>
           
-          <ProduitsListe onChange={handleProductChange} produits={products} lang={lang} />
+          <ProduitsListe onChange={handleProductChange} delete={deleteProduct} produits={products} lang={lang} />
         </div>
         
       </div>
 
    </div> 
    {showProduct === 1 ? 
-   (<PopUpProduct selectedProductName={selectedProductName} nameChange={handleInputNameChange} selectedProductPrice={selectedProductPrice} priceChange={handlePriceChange} selectedProductCat={selectedProductCat} catChange={handleCatChange} selectedProductDesc={selectedProductDesc} descChange={handleDescChange} storeId={id} lang={lang} firstButton={handleShowProduct} secondButton={editProductName} action="Modifier" />)
+   (<PopUpProduct selectedProductName={selectedProductName} nameChange={handleInputNameChange} selectedProductPrice={selectedProductPrice} priceChange={handlePriceChange} selectedProductCat={selectedProductCat} catChange={handleCatChange} selectedProductDesc={selectedProductDesc} descChange={handleDescChange} storeId={id} lang={lang} firstButton={handleShowProduct} secondButton={editProductDetails} action="Modifier" />)
    : (
     showProduct === 2 ?
     (<PopUpProduct selectedProductName={selectedProductName} nameChange={handleInputNameChange} selectedProductPrice={selectedProductPrice} priceChange={handlePriceChange} selectedProductCat={selectedProductCat} catChange={handleCatChange} selectedProductDesc={selectedProductDesc} descChange={handleDescChange} storeId={id} lang={lang} firstButton={handleShowProduct} secondButton={createProduct} action="Créer" />)
