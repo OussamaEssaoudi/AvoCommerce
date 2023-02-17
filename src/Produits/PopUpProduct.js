@@ -40,7 +40,6 @@ function handleProductDescEnChange(event) {
 }
 
   function action() {
-    console.log(selectedProductNameFr)
     let name = {
       fr : selectedProductNameFr,
       en : selectedProductNameEn

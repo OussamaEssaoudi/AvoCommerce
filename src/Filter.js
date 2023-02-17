@@ -24,24 +24,20 @@ function Filter(props) {
 
   const handleParamsChange = () => {
     let par = "";
-    // console.log(selectedValue === "conge")
     selectedValue === "tout" ? (par = "") : (
       selectedValue === "conge" ? (par = "isOpen=false&") : (par = "isOpen=true&")
     )
-    // console.log("he" + params)
   
     selectedAfterDate === "" ? (par = par) : (par = par + "dateFrom=" + selectedAfterDate + "&")
     
     selectedBeforeDate === "" ? (par = par) : (par = par + "dateTo=" + selectedBeforeDate + "&")
 
-    // console.log(par)
     setParams(par);
   }
 
   useEffect(() => {
     handleParamsChange();
     props.onChange(params);
-    // console.log(params);
   },[selectedValue,selectedAfterDate,selectedBeforeDate,params])
 
   return (

@@ -32,7 +32,6 @@ export default userSlice.reducer;
 const URL = 'http://localhost:8080';
 
 export const postLogin = (state) => {
-    console.log(state)
       return async (dispatch) => {
           const config = {
               headers: {

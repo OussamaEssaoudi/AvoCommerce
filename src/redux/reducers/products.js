@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { logout } from "../../Services/Api";
 import { createAction } from 'redux-actions';
+import { postLogout } from './useSlice';
 import axios from "axios";
 
 export const addProduct = createAction("ADD_PRODUCT");
@@ -67,7 +67,7 @@ export function fetchProducts(store,params) {
         if (error.response && error.response.status === 401) {
           // Si le jeton d'authentification n'est pas valide ou s'il n'est pas présent,
           // déconnectez l'utilisateur et affichez un message d'erreur
-          dispatch(logout());
+          dispatch(postLogout());
           dispatch(getProductsError('Vous devez vous connecter pour accéder à cette page'));
         } else {
           dispatch(getProductsError(error.message));

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { logout } from "../../Services/Api";
 import axios from "axios";
+import { postLogout } from './useSlice';
 import { createAction } from 'redux-actions';
 
 export const addCategorie = createAction("ADD_CATEGORIE");
@@ -66,7 +66,7 @@ export function fetchCategories(store,param) {
       else if (error.response && error.response.status === 401) {
         // Si le jeton d'authentification n'est pas valide ou s'il n'est pas présent,
         // déconnectez l'utilisateur et affichez un message d'erreur
-        dispatch(logout());
+        dispatch(postLogout());
         dispatch(getCategoriesError('Vous devez vous connecter pour accéder à cette page'));
       } 
       else {

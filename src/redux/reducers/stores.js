@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { logout } from "../../Services/Api";
 import { createAction } from 'redux-actions';
+import { postLogout } from './useSlice';
 import axios from "axios";
 
 export const addShop = createAction("ADD_SHOP");
@@ -65,7 +65,7 @@ export function fetchShops(params) {
         if (error.response && error.response.status === 401) {
           // Si le jeton d'authentification n'est pas valide ou s'il n'est pas présent,
           // déconnectez l'utilisateur et affichez un message d'erreur
-          dispatch(logout());
+          dispatch(postLogout());
           dispatch(getStoresError('Vous devez vous connecter pour accéder à cette page'));
         } else {
           dispatch(getStoresError(error.message));
@@ -77,13 +77,11 @@ export function fetchShops(params) {
 export async function addNewStore(store) {
   try {
     const token = JSON.parse(localStorage.getItem('user'));
-    console.log(token);
     const config = {
       headers: {
         token: `Bearer ${token}`,
       },
     };
-    console.log(store);
     const response = await axios.post(`${URL}/api/store/add`, store, config);
     addShop(response.data);
   } catch (error) {
@@ -92,16 +90,13 @@ export async function addNewStore(store) {
 }
 
 export async function editaStore(store,id) {
-  console.log(store,id)
   try {
     const token = JSON.parse(localStorage.getItem('user'));
-    console.log(token);
     const config = {
       headers: {
         token: `Bearer ${token}`,
       },
     };
-    console.log(store);
     const response = await axios.put(`${URL}/api/store/edit/${id}`, store, config);
     editShop(response.data);
   } catch (error) {
@@ -112,7 +107,6 @@ export async function editaStore(store,id) {
 export async function deleteaStore(id) {
   try {
     const token = JSON.parse(localStorage.getItem('user'));
-    console.log(token);
     const config = {
       headers: {
         token: `Bearer ${token}`,

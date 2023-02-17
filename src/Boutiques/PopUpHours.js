@@ -10,14 +10,12 @@ function PopUpHours(props) {
 
   const handleChange = (index1, index2, type, event) => {
       let newHours = [...selectedStoreHours];
-      // console.log(newHours)
       type === 'work' ? (
         newHours[index1].work = !newHours[index1].work
       ) : (
         newHours[index1].periods[index2][type] = event.target.value
       )
       setSelectedStoreHours(newHours);
-      // console.log(selectedStoreHours)
   }
 
   function action() {
@@ -28,42 +26,6 @@ function PopUpHours(props) {
   function handleShowHours() {
     props.firstButton();
   }
-
-  // "opening_hours": [
-  //   {
-  //       "day": "Lundi",
-  //       "periods": [
-  //           {
-  //               "start": "2022-12-25T19:54:28.000Z",
-  //               "end": "2022-12-25T19:54:28.000Z",
-  //               "_id": "63ab62148aa60038c715fa65"
-  //           },
-  //           {
-  //               "start": "2022-12-25T19:54:28.000Z",
-  //               "end": "2022-12-25T19:54:28.000Z",
-  //               "_id": "63ab62148aa60038c715fa66"
-  //           }
-  //       ],
-  //       "_id": "63ab62148aa60038c715fa64"
-  //   },
-  //    {
-    //       "day": "Lundi",
-    //       "periods": [
-    //           {
-    //               "start": "2022-12-25T19:54:28.000Z",
-    //               "end": "2022-12-25T19:54:28.000Z",
-    //               "_id": "63ab62148aa60038c715fa65"
-    //           },
-    //           {
-    //               "start": "2022-12-25T19:54:28.000Z",
-    //               "end": "2022-12-25T19:54:28.000Z",
-    //               "_id": "63ab62148aa60038c715fa66"
-    //           }
-    //       ],
-    //       "_id": "63ab62148aa60038c715fa64"
-    //   }
-  // ],
-
 
   return (
     <div className='showHours'>
